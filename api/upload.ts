@@ -1,6 +1,6 @@
 import { put } from "@vercel/blob";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { isAuthorized } from "./_lib/auth";
+import { isAuthorized } from "./_lib/auth.js";
 
 export const config = {
   api: {

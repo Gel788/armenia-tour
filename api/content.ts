@@ -2,7 +2,7 @@ import { head, put } from "@vercel/blob";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { readFileSync } from "fs";
 import { join } from "path";
-import { getAdminPassword, isAuthorized } from "./_lib/auth";
+import { isAuthorized } from "./_lib/auth.js";
 
 const BLOB_PATH = "site-content.json";
 
