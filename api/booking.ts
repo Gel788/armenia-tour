@@ -73,7 +73,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (!telegramResult.ok && !blobOk) {
     return res.status(502).json({
-      error: telegramResult.error ?? "Не удалось отправить заявку",
+      error: "error" in telegramResult ? telegramResult.error : "Не удалось отправить заявку",
     });
   }
 
@@ -81,6 +81,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     ok: true,
     telegram: telegramResult.ok,
     stored: blobOk,
-    ...(telegramResult.ok ? {} : { telegramError: telegramResult.error }),
+    ...(!telegramResult.ok && "error" in telegramResult
+      ? { telegramError: telegramResult.error }
+      : {}),
   });
 }

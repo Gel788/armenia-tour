@@ -1,14 +1,15 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { isAuthorized } from "./_lib/auth.js";
-import { resolveChatId, testTelegramConnection } from "./_lib/telegram.js";
+import { getKnownChatIds, resolveChatId, testTelegramConnection } from "./_lib/telegram.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (!isAuthorized(req)) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
+  const token = process.env.TELEGRAM_BOT_TOKEN?.trim();
+
   if (req.method === "GET") {
-    const token = process.env.TELEGRAM_BOT_TOKEN?.trim();
     if (!token) {
       return res.status(200).json({
         configured: false,
@@ -16,15 +17,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
+    const knownChatIds = await getKnownChatIds(token);
     const preferred = process.env.TELEGRAM_CHAT_ID?.trim();
     const resolved = await resolveChatId(token, preferred);
-    const test = resolved ? await testTelegramConnection() : null;
 
     return res.status(200).json({
       configured: true,
       preferredChatId: preferred ?? null,
+      knownChatIds,
       resolvedChatId: resolved,
-      test,
+      hint:
+        knownChatIds.length === 0
+          ? "Открой t.me/armenians_school_bot и нажми Start"
+          : "Chat найден — можно тестировать POST",
     });
   }
 
