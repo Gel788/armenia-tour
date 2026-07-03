@@ -28,7 +28,7 @@ export function expandChatIdCandidates(raw: string): string[] {
   const digits = id.replace(/\D/g, "");
   if (!digits) return [];
 
-  return [`-100${digits}`, `-${digits}`, digits];
+  return [`-${digits}`, `-100${digits}`, digits];
 }
 
 /** Chat ID из getUpdates (сообщения в группе, /start и т.д.) */
@@ -52,10 +52,12 @@ export function buildChatCandidates(preferred?: string, fromUpdates: string[] = 
     if (id && !out.includes(id)) out.push(id);
   };
 
-  for (const id of fromUpdates) add(id);
+  // Сначала группа из env (PEER ID → -5350043255)
   if (preferred) {
     for (const variant of expandChatIdCandidates(preferred)) add(variant);
   }
+  // Потом чаты из getUpdates (если env не сработал)
+  for (const id of fromUpdates) add(id);
 
   return out;
 }
