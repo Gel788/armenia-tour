@@ -225,32 +225,6 @@ function EdgeStripes({ side }: { side: "left" | "right" }) {
   );
 }
 
-function HorizontalBand({ position }: { position: "top" | "bottom" }) {
-  return (
-    <svg
-      className={`pointer-events-none absolute inset-x-0 h-16 opacity-[0.14] md:h-20 md:opacity-[0.18] ${
-        position === "top" ? "top-0" : "bottom-0"
-      }`}
-      viewBox="0 0 400 64"
-      preserveAspectRatio="none"
-      aria-hidden
-    >
-      {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
-        <line
-          key={i}
-          x1={i * 42}
-          y1={position === "top" ? "0" : "64"}
-          x2={i * 42 + 28}
-          y2={position === "top" ? "64" : "0"}
-          stroke={STROKE_SOFT}
-          strokeWidth="0.7"
-          opacity={0.35 + (i % 3) * 0.12}
-        />
-      ))}
-    </svg>
-  );
-}
-
 export function SectionOrnament({
   variant,
   index = 0,
@@ -261,7 +235,6 @@ export function SectionOrnament({
   const base = uid.replace(/:/g, "");
   const resolvedVariant = variant ?? pickVariant(index);
   const resolvedSide = side ?? pickSide(index);
-  const oppositeSide = resolvedSide === "right" ? "left" : "right";
 
   return (
     <div
@@ -273,17 +246,8 @@ export function SectionOrnament({
         variant={resolvedVariant}
         side={resolvedSide}
       />
-      <PatternPanel
-        patternId={`${base}-alt`}
-        variant={VARIANTS[(VARIANTS.indexOf(resolvedVariant) + 2) % VARIANTS.length]}
-        side={oppositeSide}
-        opacity="opacity-[0.08] md:opacity-[0.1]"
-      />
 
-      <HorizontalBand position="top" />
-      <HorizontalBand position="bottom" />
       <CornerAccent side={resolvedSide} />
-      <CornerAccent side={oppositeSide} />
       <EdgeStripes side={resolvedSide} />
     </div>
   );

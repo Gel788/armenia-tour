@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "motion/react";
-import { ScrollTrigger } from "../../../hooks/useSmoothScroll";
+import { useState } from "react";
+import { motion, AnimatePresence, useMotionValueEvent } from "motion/react";
+import { useActiveSection, useScrollProgress } from "../../../hooks/useScrollProgress";
 import { contact } from "../../../data/tour";
 import { PrimaryCta } from "./FlowEffects";
 
@@ -14,29 +14,27 @@ const NAV = [
   { href: "#included", label: "Включено" },
 ] as const;
 
+const SECTION_IDS = [
+  "hero",
+  "program",
+  "day-1",
+  "day-2",
+  "day-3",
+  "day-4",
+  "gallery",
+  "included",
+  "outro",
+] as const;
+
 export function FlowNav() {
-  const [active, setActive] = useState("hero");
+  const active = useActiveSection([...SECTION_IDS], "hero");
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const { scrollYProgress } = useScroll();
+  const scrollYProgress = useScrollProgress();
 
   useMotionValueEvent(scrollYProgress, "change", (v) => {
     setScrolled(v > 0.04);
   });
-
-  useEffect(() => {
-    const ids = ["hero", "program", "day-1", "day-2", "day-3", "day-4", "gallery", "included", "outro"];
-    const triggers = ids.map((id) =>
-      ScrollTrigger.create({
-        trigger: id === "hero" ? "#hero" : `#${id}`,
-        start: "top 55%",
-        end: "bottom 45%",
-        onEnter: () => setActive(id),
-        onEnterBack: () => setActive(id),
-      }),
-    );
-    return () => triggers.forEach((t) => t.kill());
-  }, []);
 
   return (
     <>
@@ -53,7 +51,7 @@ export function FlowNav() {
         <div
           className={`mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 transition-all duration-500 md:px-10 ${
             scrolled
-              ? "rounded-full border border-line/50 bg-ink/75 py-2.5 pl-5 pr-2.5 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-2xl md:mx-8 lg:mx-auto"
+              ? "rounded-full border border-line/50 bg-ink/88 py-2.5 pl-5 pr-2.5 shadow-[0_8px_40px_rgba(0,0,0,0.35)] md:mx-8 lg:mx-auto"
               : ""
           }`}
         >
@@ -106,7 +104,7 @@ export function FlowNav() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[70] flex flex-col bg-ink/97 backdrop-blur-2xl lg:hidden"
+            className="fixed inset-0 z-[70] flex flex-col bg-ink/97 lg:hidden"
           >
             <div className="flex items-center justify-between px-5 py-5">
               <span className="font-display text-xl text-paper">ARMENIA</span>
@@ -152,7 +150,7 @@ export function FlowNav() {
 
 export function StickyBookBar() {
   const [visible, setVisible] = useState(false);
-  const { scrollYProgress } = useScroll();
+  const scrollYProgress = useScrollProgress();
 
   useMotionValueEvent(scrollYProgress, "change", (v) => {
     setVisible(v > 0.08 && v < 0.92);
@@ -165,7 +163,7 @@ export function StickyBookBar() {
           initial={{ y: 80, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 80, opacity: 0 }}
-          className="fixed bottom-0 left-0 right-0 z-50 border-t border-line/60 bg-ink/90 p-4 backdrop-blur-xl sm:hidden"
+          className="fixed bottom-0 left-0 right-0 z-50 border-t border-line/60 bg-ink/95 p-4 sm:hidden"
         >
           <div className="flex gap-3">
             <a

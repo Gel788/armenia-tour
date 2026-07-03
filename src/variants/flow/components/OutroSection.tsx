@@ -1,5 +1,3 @@
-import { useRef } from "react";
-import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
 import { contact } from "../../../data/tour";
 import { Eyebrow, fadeUpBlur, GhostCta, Grain, PrimaryCta, Reveal } from "./FlowEffects";
 
@@ -11,31 +9,17 @@ type OutroSectionProps = {
 };
 
 export function OutroSection({ title, subtitle, body, image }: OutroSectionProps) {
-  const ref = useRef<HTMLElement>(null);
-  const reduced = useReducedMotion();
-
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-
-  const scale = useTransform(scrollYProgress, [0, 1], [1.12, 1]);
-
   return (
     <section
-      ref={ref}
-      className="relative flex min-h-[100svh] items-center justify-center overflow-hidden"
+      className="scroll-section relative flex min-h-[100svh] items-center justify-center overflow-hidden"
       aria-labelledby="flow-outro-title"
     >
-      <motion.div
-        className="absolute inset-0 will-change-transform"
-        style={reduced ? undefined : { scale }}
-      >
+      <div className="absolute inset-0">
         <img src={image} alt="" className="h-full w-full object-cover" loading="lazy" />
         <div className="absolute inset-0 bg-ink/78" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,color-mix(in_srgb,var(--color-accent)_14%,transparent),transparent_65%)]" />
         <Grain />
-      </motion.div>
+      </div>
 
       <div className="relative z-10 w-full px-6 py-24 md:px-12">
         <div className="mx-auto max-w-2xl text-center">

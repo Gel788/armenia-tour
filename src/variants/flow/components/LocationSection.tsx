@@ -1,5 +1,3 @@
-import { useRef } from "react";
-import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
 import type { TourSection } from "../../../data/tour";
 import { Eyebrow, fadeUpBlur, Grain, Reveal } from "./FlowEffects";
 import { SectionOrnament, OrnamentWrap } from "./SectionOrnament";
@@ -10,23 +8,13 @@ type LocationSectionProps = {
 };
 
 export function LocationSection({ section, index }: LocationSectionProps) {
-  const ref = useRef<HTMLElement>(null);
-  const reduced = useReducedMotion();
   const reversed = index % 2 === 1;
   const gallery = section.gallery ?? [];
 
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-
-  const imageY = useTransform(scrollYProgress, [0, 1], ["5%", "-5%"]);
-
   return (
     <section
-      ref={ref}
       id={section.id}
-      className={`relative overflow-hidden py-20 md:py-28 ${
+      className={`scroll-section relative overflow-hidden py-20 md:py-28 ${
         reversed ? "bg-surface" : "bg-ink-soft"
       }`}
       aria-labelledby={`loc-${section.id}-title`}
@@ -42,65 +30,59 @@ export function LocationSection({ section, index }: LocationSectionProps) {
         >
           <Reveal variant={fadeUpBlur} className="lg:[direction:ltr]">
             <OrnamentWrap index={index}>
-            <motion.div
-              className="flow-frame relative aspect-[4/5] overflow-hidden rounded-sm"
-              style={reduced ? undefined : { y: imageY }}
-            >
-              <img
-                src={section.image}
-                alt={section.title}
-                className="h-full w-full object-cover"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-ink/60 to-transparent" />
-              {section.tag && (
-                <span className="absolute bottom-4 left-4 rounded-full border border-line/60 bg-ink/70 px-4 py-1.5 text-[10px] uppercase tracking-[0.25em] text-accent backdrop-blur-sm">
-                  {section.tag}
-                </span>
-              )}
-            </motion.div>
+              <div className="flow-frame relative aspect-[4/5] overflow-hidden rounded-sm">
+                <img
+                  src={section.image}
+                  alt={section.title}
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/60 to-transparent" />
+                {section.tag && (
+                  <span className="absolute bottom-4 left-4 rounded-full border border-line/60 bg-ink/80 px-4 py-1.5 text-[10px] uppercase tracking-[0.25em] text-accent">
+                    {section.tag}
+                  </span>
+                )}
+              </div>
             </OrnamentWrap>
           </Reveal>
 
           <div className="lg:[direction:ltr]">
             <OrnamentWrap index={index + 1}>
               <div className="relative px-1 py-2 md:px-2 md:py-3">
-            <Reveal variant={fadeUpBlur}>
-              <Eyebrow>День {section.day}</Eyebrow>
-            </Reveal>
-            <Reveal variant={fadeUpBlur} delay={0.06}>
-              <h3
-                id={`loc-${section.id}-title`}
-                className="mt-4 font-display text-3xl font-semibold text-paper md:text-4xl"
-              >
-                {section.title}
-              </h3>
-            </Reveal>
-            <Reveal variant={fadeUpBlur} delay={0.12}>
-              <p className="mt-6 text-base leading-[1.85] text-paper-muted md:text-lg">
-                {section.body}
-              </p>
-            </Reveal>
+                <Reveal variant={fadeUpBlur}>
+                  <Eyebrow>День {section.day}</Eyebrow>
+                </Reveal>
+                <Reveal variant={fadeUpBlur} delay={0.06}>
+                  <h3
+                    id={`loc-${section.id}-title`}
+                    className="mt-4 font-display text-3xl font-semibold text-paper md:text-4xl"
+                  >
+                    {section.title}
+                  </h3>
+                </Reveal>
+                <Reveal variant={fadeUpBlur} delay={0.12}>
+                  <p className="mt-6 text-base leading-[1.85] text-paper-muted md:text-lg">
+                    {section.body}
+                  </p>
+                </Reveal>
 
-            {gallery.length > 0 && (
-              <div className="mt-8 grid grid-cols-3 gap-2">
-                {gallery.map((src, i) => (
-                  <Reveal key={src} variant={fadeUpBlur} delay={0.16 + i * 0.06}>
-                    <motion.div
-                      whileHover={{ scale: 1.04 }}
-                      className="aspect-square overflow-hidden rounded-sm"
-                    >
-                      <img
-                        src={src}
-                        alt=""
-                        className="h-full w-full object-cover"
-                        loading="lazy"
-                      />
-                    </motion.div>
-                  </Reveal>
-                ))}
-              </div>
-            )}
+                {gallery.length > 0 && (
+                  <div className="mt-8 grid grid-cols-3 gap-2">
+                    {gallery.map((src, i) => (
+                      <Reveal key={src} variant={fadeUpBlur} delay={0.16 + i * 0.06}>
+                        <div className="aspect-square overflow-hidden rounded-sm transition-transform duration-500 hover:scale-[1.03]">
+                          <img
+                            src={src}
+                            alt=""
+                            className="h-full w-full object-cover"
+                            loading="lazy"
+                          />
+                        </div>
+                      </Reveal>
+                    ))}
+                  </div>
+                )}
               </div>
             </OrnamentWrap>
           </div>

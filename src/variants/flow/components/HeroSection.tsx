@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { heroStats } from "../../../data/tour";
 import { GhostCta, Grain, PrimaryCta } from "./FlowEffects";
 
@@ -19,16 +19,6 @@ export function HeroSection({
 }: HeroSectionProps) {
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
-
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
-
-  const imgScale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const contentY = useTransform(scrollYProgress, [0, 0.5], ["0%", "8%"]);
-
   const letters = title.split("");
 
   return (
@@ -38,26 +28,21 @@ export function HeroSection({
       className="relative min-h-[100svh] overflow-hidden"
       aria-labelledby="hero-title"
     >
-      <motion.div
-        className="absolute inset-0 will-change-transform"
-        style={reduced ? undefined : { scale: imgScale }}
-      >
+      <div className="absolute inset-0">
         <img
           src={image}
           alt="Монастырь Хор Вирап и вид на гору Арарат, Армения"
           className="h-full w-full object-cover object-[center_45%] md:object-[center_42%]"
           loading="eager"
+          fetchPriority="high"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/50 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-r from-ink/92 via-ink/35 to-transparent md:from-ink/82 md:via-ink/18" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_58%_28%,transparent_0%,color-mix(in_srgb,var(--color-ink)_28%,transparent)_68%)]" />
         <Grain />
-      </motion.div>
+      </div>
 
-      <motion.div
-        className="relative z-10 flex min-h-[100svh] flex-col justify-end px-6 pb-10 pt-28 md:px-12 md:pb-16 lg:px-20"
-        style={reduced ? undefined : { opacity: contentOpacity, y: contentY }}
-      >
+      <div className="relative z-10 flex min-h-[100svh] flex-col justify-end px-6 pb-10 pt-28 md:px-12 md:pb-16 lg:px-20">
         <div className="mx-auto w-full max-w-7xl">
           <div className="grid items-end gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-14 xl:gap-20">
             <div className="hero-copy-panel max-w-xl lg:max-w-2xl">
@@ -189,7 +174,7 @@ export function HeroSection({
             ))}
           </motion.div>
         </div>
-      </motion.div>
+      </div>
 
       <motion.div
         className="absolute bottom-6 left-1/2 z-10 hidden -translate-x-1/2 md:flex md:flex-col md:items-center md:gap-2"

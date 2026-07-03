@@ -1,4 +1,3 @@
-import { useSmoothScroll } from "../../hooks/useSmoothScroll";
 import { tourSections } from "../../data/tour";
 import { HeroSection } from "./components/HeroSection";
 import { DayIntro } from "./components/DayIntro";
@@ -12,8 +11,6 @@ import { TrustBar } from "./components/TrustBar";
 import { contact } from "../../data/tour";
 
 export default function AppFlow() {
-  useSmoothScroll();
-
   const hero = tourSections.find((s) => s.type === "hero")!;
   let dayIntroIndex = 0;
   let locationIndex = 0;
