@@ -1,6 +1,11 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { isAuthorized } from "./_lib/auth.js";
-import { getKnownChatIds, resolveChatId, testTelegramConnection } from "./_lib/telegram.js";
+import {
+  buildChatCandidates,
+  expandChatIdCandidates,
+  getKnownChatIds,
+  testTelegramConnection,
+} from "./_lib/telegram.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (!isAuthorized(req)) {
@@ -8,6 +13,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const token = process.env.TELEGRAM_BOT_TOKEN?.trim();
+  const preferred = process.env.TELEGRAM_CHAT_ID?.trim();
 
   if (req.method === "GET") {
     if (!token) {
@@ -18,18 +24,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const knownChatIds = await getKnownChatIds(token);
-    const preferred = process.env.TELEGRAM_CHAT_ID?.trim();
-    const resolved = await resolveChatId(token, preferred);
+    const candidates = buildChatCandidates(preferred, knownChatIds);
 
     return res.status(200).json({
       configured: true,
       preferredChatId: preferred ?? null,
+      candidateChatIds: preferred ? expandChatIdCandidates(preferred) : [],
       knownChatIds,
-      resolvedChatId: resolved,
-      hint:
-        knownChatIds.length === 0
-          ? "Открой t.me/armenians_school_bot и нажми Start"
-          : "Chat найден — можно тестировать POST",
+      willTry: candidates,
     });
   }
 

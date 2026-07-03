@@ -13,29 +13,51 @@ async function tgApi<T>(token: string, method: string, body: Record<string, unkn
   return res.json() as Promise<T>;
 }
 
-type Update = { message?: { chat?: { id: number; type?: string; username?: string } } };
+type Update = {
+  message?: { chat?: { id: number; type?: string; title?: string } };
+  my_chat_member?: { chat?: { id: number; type?: string; title?: string } };
+};
 
-/** Все chat_id из сообщений боту (после /start) */
+/** PEER ID из клиента → варианты chat_id для Bot API (группы = минус / -100) */
+export function expandChatIdCandidates(raw: string): string[] {
+  const id = raw.trim();
+  if (!id) return [];
+
+  if (id.startsWith("-")) return [id];
+
+  const digits = id.replace(/\D/g, "");
+  if (!digits) return [];
+
+  return [`-100${digits}`, `-${digits}`, digits];
+}
+
+/** Chat ID из getUpdates (сообщения в группе, /start и т.д.) */
 export async function getKnownChatIds(token: string): Promise<string[]> {
   type Updates = { ok: boolean; result?: Update[] };
-  const data = await tgApi<Updates>(token, "getUpdates", { limit: 50 });
+  const data = await tgApi<Updates>(token, "getUpdates", { limit: 100 });
   if (!data.ok || !data.result?.length) return [];
 
   const ids = new Set<string>();
   for (const u of data.result) {
-    const id = u.message?.chat?.id;
-    if (id != null) ids.add(String(id));
+    const chat = u.message?.chat ?? u.my_chat_member?.chat;
+    const chatId = chat?.id;
+    if (chatId != null) ids.add(String(chatId));
   }
   return [...ids];
 }
 
-/** Предпочитаем чат из getUpdates; env — запасной вариант */
-export async function resolveChatId(token: string, preferred?: string): Promise<string | null> {
-  const fromUpdates = await getKnownChatIds(token);
-  if (fromUpdates.length) return fromUpdates[fromUpdates.length - 1];
+export function buildChatCandidates(preferred?: string, fromUpdates: string[] = []): string[] {
+  const out: string[] = [];
+  const add = (id: string) => {
+    if (id && !out.includes(id)) out.push(id);
+  };
 
-  const pref = preferred?.trim();
-  return pref || null;
+  for (const id of fromUpdates) add(id);
+  if (preferred) {
+    for (const variant of expandChatIdCandidates(preferred)) add(variant);
+  }
+
+  return out;
 }
 
 async function sendToChat(
@@ -77,33 +99,30 @@ export async function sendBookingToTelegram(
   );
   const text = lines.join("\n");
 
-  const candidates = await getKnownChatIds(token);
-  if (preferredChat && !candidates.includes(preferredChat)) {
-    candidates.unshift(preferredChat);
-  }
+  const fromUpdates = await getKnownChatIds(token);
+  const candidates = buildChatCandidates(preferredChat, fromUpdates);
 
   if (!candidates.length) {
-    return {
-      ok: false,
-      error:
-        "Открой t.me/armenians_school_bot и нажми Start — без этого бот не может писать в чат.",
-    };
+    return { ok: false, error: "TELEGRAM_CHAT_ID не задан" };
   }
 
+  let lastError = "";
   for (const chatId of candidates) {
     const sent = await sendToChat(token, chatId, text);
     if (sent.ok) return { ok: true, chatId };
+    lastError = sent.error ?? lastError;
   }
 
   return {
     ok: false,
-    error: `Не удалось отправить. Проверь Start у @armenians_school_bot. Chat ID: ${candidates.join(", ")}`,
+    error: lastError || `Не удалось отправить в чат. Пробовали: ${candidates.join(", ")}`,
   };
 }
 
 export async function testTelegramConnection(): Promise<{
   ok: boolean;
   chatId?: string;
+  triedChatIds?: string[];
   knownChatIds?: string[];
   error?: string;
 }> {
@@ -112,32 +131,29 @@ export async function testTelegramConnection(): Promise<{
 
   const knownChatIds = await getKnownChatIds(token);
   const preferred = process.env.TELEGRAM_CHAT_ID?.trim();
-  const chatId = await resolveChatId(token, preferred);
+  const candidates = buildChatCandidates(preferred, knownChatIds);
 
-  if (!chatId && !knownChatIds.length) {
-    return {
-      ok: false,
-      knownChatIds: [],
-      error: "Нет чата. Открой t.me/armenians_school_bot и нажми Start.",
-    };
+  if (!candidates.length) {
+    return { ok: false, error: "TELEGRAM_CHAT_ID не задан" };
   }
 
-  const candidates = [...knownChatIds];
-  if (preferred && !candidates.includes(preferred)) candidates.unshift(preferred);
-
+  let lastError = "";
   for (const id of candidates) {
     const sent = await sendToChat(
       token,
       id,
       "✅ Бот подключён к сайту Armenia Tour. Заявки будут приходить сюда.",
     );
-    if (sent.ok) return { ok: true, chatId: id, knownChatIds };
+    if (sent.ok) {
+      return { ok: true, chatId: id, triedChatIds: candidates, knownChatIds };
+    }
+    lastError = sent.error ?? lastError;
   }
 
   return {
     ok: false,
-    chatId: candidates[0],
+    triedChatIds: candidates,
     knownChatIds,
-    error: "chat not found — нажми Start у @armenians_school_bot",
+    error: lastError,
   };
 }
