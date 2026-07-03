@@ -1,5 +1,6 @@
 import { head, put } from "@vercel/blob";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { sendBookingToTelegram } from "./_lib/telegram.js";
 
 const BLOB_PATH = "bookings.json";
 
@@ -9,45 +10,6 @@ type BookingLead = {
   phoneAlt?: string;
   createdAt: string;
 };
-
-function escapeHtml(text: string): string {
-  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-}
-
-async function sendTelegram(lead: BookingLead): Promise<boolean> {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-  if (!token || !chatId) return false;
-
-  const lines = [
-    "🆕 <b>Новая заявка на тур</b>",
-    "",
-    `👤 Имя: <b>${escapeHtml(lead.name)}</b>`,
-    `📞 Телефон: <code>${escapeHtml(lead.phone)}</code>`,
-  ];
-  if (lead.phoneAlt) {
-    lines.push(`📱 Доп. телефон: <code>${escapeHtml(lead.phoneAlt)}</code>`);
-  }
-  lines.push(
-    "",
-    `🕐 ${new Date(lead.createdAt).toLocaleString("ru-RU", { timeZone: "Asia/Yerevan" })} (Ереван)`,
-  );
-
-  try {
-    const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text: lines.join("\n"),
-        parse_mode: "HTML",
-      }),
-    });
-    return res.ok;
-  } catch {
-    return false;
-  }
-}
 
 async function saveToBlob(lead: BookingLead): Promise<boolean> {
   if (!process.env.BLOB_READ_WRITE_TOKEN) return false;
@@ -100,14 +62,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     createdAt: new Date().toISOString(),
   };
 
-  const [telegramOk, blobOk] = await Promise.all([
-    sendTelegram(lead),
+  const [telegramResult, blobOk] = await Promise.all([
+    sendBookingToTelegram(lead),
     saveToBlob(lead),
   ]);
 
-  if (!telegramOk && !blobOk) {
-    console.log("[booking]", JSON.stringify(lead));
+  if (!telegramResult.ok) {
+    console.error("[booking] telegram failed:", telegramResult.error);
   }
 
-  return res.status(200).json({ ok: true, telegram: telegramOk, stored: blobOk });
+  if (!telegramResult.ok && !blobOk) {
+    return res.status(502).json({
+      error: telegramResult.error ?? "Не удалось отправить заявку",
+    });
+  }
+
+  return res.status(200).json({
+    ok: true,
+    telegram: telegramResult.ok,
+    stored: blobOk,
+    ...(telegramResult.ok ? {} : { telegramError: telegramResult.error }),
+  });
 }
