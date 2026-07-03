@@ -1,0 +1,294 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-body: "Instrument Sans", system-ui, sans-serif;
+
+  /* Forest twilight — earth & moss */
+  --color-ink: #0e1210;
+  --color-ink-soft: #141a16;
+  --color-surface: #1a211c;
+  --color-surface-elevated: #232b25;
+  --color-paper: #e8ebe4;
+  --color-paper-muted: #96a094;
+  --color-accent: #6d9b7a;
+  --color-accent-dim: #4a7356;
+  --color-accent-warm: #a67552;
+  --color-sky: #7a9bab;
+  --color-line: rgba(232, 235, 228, 0.11);
+
+  --spacing-section: 100vh;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  body {
+    margin: 0;
+    overflow-x: hidden;
+    background: var(--color-ink);
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-accent) 35%, transparent);
+    color: var(--color-paper);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .mask-fade-b {
+    mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  }
+
+  .mask-fade-edges {
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 8%,
+      black 92%,
+      transparent
+    );
+  }
+
+  @keyframes scroll-cue {
+    0% {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    40% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(200%);
+      opacity: 0;
+    }
+  }
+
+  @keyframes float-soft {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  .animate-float-soft {
+    animation: float-soft 5s ease-in-out infinite;
+  }
+
+  .slide-frame {
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--color-accent) 22%, transparent),
+      0 24px 80px rgba(0, 0, 0, 0.45);
+  }
+
+  .glow-nature {
+    box-shadow: 0 0 24px 3px color-mix(in srgb, var(--color-accent) 35%, transparent);
+  }
+
+  .hero-vignette {
+    box-shadow: inset 0 0 120px 40px color-mix(in srgb, var(--color-ink) 60%, transparent);
+  }
+
+  .hero-copy-panel {
+    position: relative;
+    padding: 1.25rem 0 0.5rem;
+  }
+
+  .hero-copy-panel::before {
+    content: "";
+    position: absolute;
+    inset: -1rem -1.25rem auto -1.25rem;
+    height: calc(100% + 1.5rem);
+    border-radius: 2px;
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-ink) 72%, transparent) 0%,
+      color-mix(in srgb, var(--color-ink) 38%, transparent) 55%,
+      transparent 100%
+    );
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .hero-eyebrow-line {
+    display: block;
+    height: 1px;
+    width: 2.75rem;
+    background: linear-gradient(
+      to right,
+      var(--color-accent),
+      color-mix(in srgb, var(--color-accent) 35%, transparent)
+    );
+  }
+
+  .hero-title {
+    font-size: clamp(3.75rem, 13.5vw, 7.25rem);
+    line-height: 0.9;
+    letter-spacing: 0.06em;
+    text-shadow:
+      0 2px 28px color-mix(in srgb, var(--color-ink) 75%, transparent),
+      0 0 1px color-mix(in srgb, var(--color-paper) 30%, transparent);
+  }
+
+  .hero-title-track {
+    display: inline-block;
+  }
+
+  .hero-title-char {
+    display: inline-block;
+  }
+
+  .hero-title-space {
+    display: inline-block;
+    width: 0.28em;
+  }
+
+  .hero-title-rule {
+    height: 1px;
+    width: min(12rem, 55%);
+    transform-origin: left center;
+    background: linear-gradient(
+      to right,
+      color-mix(in srgb, var(--color-paper) 55%, transparent),
+      color-mix(in srgb, var(--color-accent) 45%, transparent) 55%,
+      transparent
+    );
+  }
+
+  .hero-tagline .italic {
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  .hero-body {
+    border-left: 1px solid color-mix(in srgb, var(--color-accent) 45%, transparent);
+    padding-left: 1rem;
+  }
+
+  .hero-stats-panel {
+    border: 1px solid color-mix(in srgb, var(--color-paper) 14%, transparent);
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--color-ink) 55%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    padding: 1.75rem 1.75rem 1.25rem;
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--color-paper) 8%, transparent),
+      0 20px 56px color-mix(in srgb, var(--color-ink) 55%, transparent);
+  }
+
+  .hero-stats-mobile {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    border-top: 1px solid color-mix(in srgb, var(--color-paper) 12%, transparent);
+    padding-top: 2rem;
+  }
+
+  .hero-stat-mobile {
+    padding: 0.75rem 0.5rem;
+    border: 1px solid color-mix(in srgb, var(--color-paper) 8%, transparent);
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--color-ink) 45%, transparent);
+  }
+
+  .program-highlight {
+    border-left: 2px solid color-mix(in srgb, var(--color-accent) 55%, transparent);
+  }
+
+  .program-stop:last-child .program-stop-line {
+    display: none;
+  }
+
+  .flow-frame {
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--color-accent) 18%, transparent),
+      0 20px 60px rgba(0, 0, 0, 0.4);
+  }
+
+  .flow-highlight {
+    border-left: 2px solid color-mix(in srgb, var(--color-accent) 50%, transparent);
+  }
+
+  .flow-cta-card {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-accent) 12%, transparent),
+      0 24px 64px rgba(0, 0, 0, 0.35);
+  }
+
+  .flow-marquee {
+    animation: flow-marquee 40s linear infinite;
+  }
+
+  @keyframes flow-marquee {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .flow-marquee {
+    animation: none;
+  }
+}

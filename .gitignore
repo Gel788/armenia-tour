@@ -1,0 +1,13 @@
+# Dependencies
+node_modules/
+dist/
+.venv/
+
+# OS
+.DS_Store
+
+# Temp
+extracted-text.txt
+
+# Original PDF (large)
+*.pdf

@@ -1,0 +1,40 @@
+{
+  "hero-main": {
+    "path": "public/images/web/hero-main.jpg",
+    "kb": 385,
+    "title": "Khor Virap monastery and Mount Ararat (Nat Geo / Yandex Cloud)",
+    "w": 1807,
+    "h": 1081,
+    "source": "https://storage.yandexcloud.net/storage.yasno.media/nat-geo/images/2024/3/3/f967fa2aae374f08ab80a1fc32a0a04f.max-2500x1500.jpg"
+  },
+  "hero-g1": {
+    "path": "public/images/web/hero-g1.jpg",
+    "kb": 3973,
+    "title": "File:Armenia. Lake Sevan. Sevanavank P8230612 2350.jpg",
+    "w": 3525
+  },
+  "hero-g2": {
+    "path": "public/images/web/hero-g2.jpg",
+    "kb": 2079,
+    "title": "File:Templo de Garni, Armenia, 2016-10-02, DD 03.jpg",
+    "w": 7711
+  },
+  "hero-g3": {
+    "path": "public/images/web/hero-g3.jpg",
+    "kb": 2043,
+    "title": "File:Monasterio de Geghard, Armenia, 2016-10-02, DD 65-74 PAN.jpg",
+    "w": 17843
+  },
+  "hero-g4": {
+    "path": "public/images/web/hero-g4.jpg",
+    "kb": 3270,
+    "title": "File:Heracleum sosnowskyi kz2.jpg",
+    "w": 4608
+  },
+  "outro-main": {
+    "path": "public/images/web/outro-main.jpg",
+    "kb": 536,
+    "title": "File:Yerevan-sunset-bando.jpg",
+    "w": 1600
+  }
+}
