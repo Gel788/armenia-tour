@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence, useMotionValueEvent } from "motion/react";
 import { useActiveSection, useScrollProgress } from "../../../hooks/useScrollProgress";
-import { contact } from "../../../data/tour";
+import { useTourContent } from "../../../context/TourContentContext";
 import { PrimaryCta } from "./FlowEffects";
 
 const NAV = [
@@ -149,6 +149,8 @@ export function FlowNav() {
 }
 
 export function StickyBookBar() {
+  const { content } = useTourContent();
+  const { contact } = content;
   const [visible, setVisible] = useState(false);
   const scrollYProgress = useScrollProgress();
 

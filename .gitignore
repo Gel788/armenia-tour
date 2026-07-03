@@ -11,3 +11,4 @@ extracted-text.txt
 
 # Original PDF (large)
 *.pdf
+.vercel

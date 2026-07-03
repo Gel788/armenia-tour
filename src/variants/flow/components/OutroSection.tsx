@@ -1,4 +1,4 @@
-import { contact } from "../../../data/tour";
+import { useTourContent } from "../../../context/TourContentContext";
 import { Eyebrow, fadeUpBlur, GhostCta, Grain, PrimaryCta, Reveal } from "./FlowEffects";
 
 type OutroSectionProps = {
@@ -9,6 +9,9 @@ type OutroSectionProps = {
 };
 
 export function OutroSection({ title, subtitle, body, image }: OutroSectionProps) {
+  const { content } = useTourContent();
+  const { contact } = content;
+
   return (
     <section
       className="scroll-section relative flex min-h-[100svh] items-center justify-center overflow-hidden"

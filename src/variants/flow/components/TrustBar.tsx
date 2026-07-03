@@ -1,8 +1,9 @@
 import { motion } from "motion/react";
-import { trustPills } from "../../../data/tour";
+import { useTourContent } from "../../../context/TourContentContext";
 
 export function TrustBar() {
-  const items = [...trustPills, ...trustPills];
+  const { content } = useTourContent();
+  const items = [...content.trustPills, ...content.trustPills];
 
   return (
     <section

@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { heroStats } from "../../../data/tour";
+import { useTourContent } from "../../../context/TourContentContext";
 import { GhostCta, Grain, PrimaryCta } from "./FlowEffects";
 
 type HeroSectionProps = {
@@ -17,6 +17,8 @@ export function HeroSection({
   body,
   image,
 }: HeroSectionProps) {
+  const { content } = useTourContent();
+  const heroStats = content.heroStats;
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
   const letters = title.split("");

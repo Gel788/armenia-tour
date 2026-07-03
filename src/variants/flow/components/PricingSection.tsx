@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { pricingItems, contact } from "../../../data/tour";
+import { useTourContent } from "../../../context/TourContentContext";
 import { Eyebrow, fadeUpBlur, Grain, PrimaryCta, Reveal } from "./FlowEffects";
 import { SectionOrnament, OrnamentWrap } from "./SectionOrnament";
 
@@ -10,6 +10,9 @@ type PricingSectionProps = {
 };
 
 export function PricingSection({ title, body, image }: PricingSectionProps) {
+  const { content } = useTourContent();
+  const { pricingItems, contact } = content;
+
   return (
     <section
       id="included"

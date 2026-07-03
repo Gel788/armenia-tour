@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { motion } from "motion/react";
-import { tourSections } from "../../../data/tour";
+import { useTourContent } from "../../../context/TourContentContext";
 import { Eyebrow, fadeUpBlur, Reveal } from "./FlowEffects";
 
 type WallItem = {
@@ -13,10 +13,11 @@ type WallItem = {
 };
 
 export function PhotoWall() {
+  const { content } = useTourContent();
   const items = useMemo<WallItem[]>(() => {
     const result: WallItem[] = [];
     let i = 0;
-    for (const loc of tourSections.filter((s) => s.type === "location")) {
+    for (const loc of content.sections.filter((s) => s.type === "location")) {
       result.push({
         id: `${loc.id}-main`,
         src: loc.image,
@@ -39,7 +40,7 @@ export function PhotoWall() {
       i++;
     }
     return result.slice(0, 16);
-  }, []);
+  }, [content.sections]);
 
   return (
     <section

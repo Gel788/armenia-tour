@@ -1,5 +1,5 @@
-import type { TourSection } from "../../../data/tour";
-import { highlightLabels } from "../../../data/tour";
+import type { TourSection } from "../../../data/tour.types";
+import { highlightLabels } from "../../../data/tour.types";
 import { Eyebrow, fadeUpBlur, Grain, Reveal } from "./FlowEffects";
 import { SectionOrnament, OrnamentWrap } from "./SectionOrnament";
 

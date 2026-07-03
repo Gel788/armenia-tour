@@ -1,4 +1,4 @@
-import { tourSections } from "../../data/tour";
+import { useTourContent } from "../../context/TourContentContext";
 import { HeroSection } from "./components/HeroSection";
 import { DayIntro } from "./components/DayIntro";
 import { ProgramIntro } from "./components/ProgramIntro";
@@ -8,12 +8,22 @@ import { PricingSection } from "./components/PricingSection";
 import { OutroSection } from "./components/OutroSection";
 import { FlowNav, StickyBookBar } from "./components/SiteChrome";
 import { TrustBar } from "./components/TrustBar";
-import { contact } from "../../data/tour";
 
 export default function AppFlow() {
-  const hero = tourSections.find((s) => s.type === "hero")!;
+  const { content, loading } = useTourContent();
+  const { sections, contact } = content;
+
+  const hero = sections.find((s) => s.type === "hero")!;
   let dayIntroIndex = 0;
   let locationIndex = 0;
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-ink text-paper-muted">
+        Загрузка тура…
+      </div>
+    );
+  }
 
   return (
     <>
@@ -31,7 +41,7 @@ export default function AppFlow() {
 
         <TrustBar />
 
-        {tourSections.map((section) => {
+        {sections.map((section) => {
           if (section.type === "hero") return null;
 
           if (section.type === "program-intro") {
