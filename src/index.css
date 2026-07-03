@@ -608,6 +608,128 @@
   width: min(100%, 28rem);
 }
 
+/* ── Booking form ── */
+.booking-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.booking-form-compact {
+  gap: 0.875rem;
+}
+
+.booking-field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.booking-label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-paper-muted);
+}
+
+.booking-optional {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: none;
+  color: color-mix(in srgb, var(--color-paper-muted) 75%, transparent);
+}
+
+.booking-input {
+  width: 100%;
+  border: 1px solid var(--color-line);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--color-ink) 65%, transparent);
+  padding: 0.85rem 1rem;
+  color: var(--color-paper);
+  font: inherit;
+  font-size: 0.9375rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.booking-input::placeholder {
+  color: color-mix(in srgb, var(--color-paper-muted) 70%, transparent);
+}
+
+.booking-input:focus {
+  outline: none;
+  border-color: color-mix(in srgb, var(--color-accent) 50%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 15%, transparent);
+}
+
+.booking-input.has-error {
+  border-color: color-mix(in srgb, #c96 55%, transparent);
+}
+
+.booking-error {
+  font-size: 12px;
+  color: color-mix(in srgb, #d9a 90%, white);
+}
+
+.booking-submit {
+  margin-top: 0.25rem;
+  width: 100%;
+  border: none;
+  border-radius: 999px;
+  background: var(--color-accent);
+  padding: 0.95rem 1.5rem;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  cursor: pointer;
+  box-shadow: 0 8px 32px color-mix(in srgb, var(--color-accent) 35%, transparent);
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.booking-submit:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-accent) 88%, white);
+}
+
+.booking-submit:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.booking-card {
+  border: 1px solid color-mix(in srgb, var(--color-paper) 12%, transparent);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--color-ink) 72%, transparent);
+  padding: 1.75rem;
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--color-paper) 6%, transparent),
+    0 24px 64px color-mix(in srgb, var(--color-ink) 50%, transparent);
+}
+
+.booking-form-success {
+  border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.booking-form-link {
+  border: none;
+  background: none;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 @media (max-width: 900px) {
   .admin-shell {
     grid-template-columns: 1fr;

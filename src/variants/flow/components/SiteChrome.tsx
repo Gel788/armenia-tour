@@ -83,7 +83,7 @@ export function FlowNav() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <PrimaryCta href="#outro" className="hidden !px-5 !py-2.5 sm:inline-flex">
+            <PrimaryCta href="#booking" className="hidden !px-5 !py-2.5 sm:inline-flex">
               Забронировать
             </PrimaryCta>
             <button
@@ -131,7 +131,7 @@ export function FlowNav() {
                 </motion.a>
               ))}
               <motion.a
-                href="#outro"
+                href="#booking"
                 onClick={() => setOpen(false)}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -175,7 +175,7 @@ export function StickyBookBar() {
               Email
             </a>
             <a
-              href="#outro"
+              href="#booking"
               className="flex flex-[2] items-center justify-center rounded-full bg-accent py-3.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-ink"
             >
               Забронировать

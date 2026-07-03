@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { useTourContent } from "../../../context/TourContentContext";
-import { Eyebrow, fadeUpBlur, Grain, PrimaryCta, Reveal } from "./FlowEffects";
+import { Eyebrow, fadeUpBlur, Grain, Reveal } from "./FlowEffects";
+import { BookingForm } from "./BookingForm";
 import { SectionOrnament, OrnamentWrap } from "./SectionOrnament";
 
 type PricingSectionProps = {
@@ -88,15 +89,20 @@ export function PricingSection({ title, body, image }: PricingSectionProps) {
                 спланировать поездку.
               </p>
 
-              <div className="mt-8 flex flex-col gap-3">
-                <PrimaryCta href={`mailto:${contact.email}?subject=Бронирование тура по Армении`} className="w-full">
-                  Написать на email
-                </PrimaryCta>
+              <BookingForm variant="compact" className="mt-8" />
+
+              <div className="mt-6 flex flex-col gap-2 border-t border-line/60 pt-6">
+                <a
+                  href={`mailto:${contact.email}`}
+                  className="text-center text-[11px] uppercase tracking-[0.15em] text-paper-muted transition-colors hover:text-accent"
+                >
+                  или {contact.email}
+                </a>
                 <a
                   href={contact.telegram}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex w-full items-center justify-center rounded-full border border-line py-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-paper transition-colors hover:border-accent/40 hover:text-accent"
+                  className="text-center text-[11px] uppercase tracking-[0.15em] text-paper-muted transition-colors hover:text-accent"
                 >
                   Telegram
                 </a>

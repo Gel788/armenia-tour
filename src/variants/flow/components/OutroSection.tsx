@@ -1,5 +1,6 @@
 import { useTourContent } from "../../../context/TourContentContext";
-import { Eyebrow, fadeUpBlur, GhostCta, Grain, PrimaryCta, Reveal } from "./FlowEffects";
+import { BookingForm } from "./BookingForm";
+import { Eyebrow, fadeUpBlur, GhostCta, Grain, Reveal } from "./FlowEffects";
 
 type OutroSectionProps = {
   title: string;
@@ -25,7 +26,8 @@ export function OutroSection({ title, subtitle, body, image }: OutroSectionProps
       </div>
 
       <div className="relative z-10 w-full px-6 py-24 md:px-12">
-        <div className="mx-auto max-w-2xl text-center">
+        <div className="mx-auto grid max-w-5xl items-start gap-12 lg:grid-cols-[1fr_380px] lg:gap-16">
+          <div className="text-center lg:text-left">
           <Reveal variant={fadeUpBlur}>
             {subtitle && <Eyebrow>{subtitle}</Eyebrow>}
           </Reveal>
@@ -47,16 +49,13 @@ export function OutroSection({ title, subtitle, body, image }: OutroSectionProps
           </Reveal>
 
           <Reveal variant={fadeUpBlur} delay={0.24}>
-            <div className="mt-12 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
-              <PrimaryCta href={`mailto:${contact.email}?subject=Хочу забронировать тур`}>
-                Забронировать тур
-              </PrimaryCta>
+            <div className="mt-10 flex justify-center lg:justify-start">
               <GhostCta href="#program">Ещё раз программа</GhostCta>
             </div>
           </Reveal>
 
           <Reveal variant={fadeUpBlur} delay={0.32}>
-            <div className="mt-14 flex flex-wrap items-center justify-center gap-6 text-sm text-paper-muted">
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-6 text-sm text-paper-muted lg:justify-start">
               <a href={`mailto:${contact.email}`} className="transition-colors hover:text-accent">
                 {contact.email}
               </a>
@@ -69,6 +68,22 @@ export function OutroSection({ title, subtitle, body, image }: OutroSectionProps
               >
                 Telegram
               </a>
+            </div>
+          </Reveal>
+          </div>
+
+          <Reveal variant={fadeUpBlur} delay={0.2}>
+            <div id="booking" className="booking-card mx-auto w-full max-w-md lg:max-w-none">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-accent">
+                Заявка на тур
+              </p>
+              <h3 className="mt-3 font-display text-2xl font-semibold text-paper md:text-3xl">
+                Забронировать место
+              </h3>
+              <p className="mt-3 text-sm text-paper-muted">
+                Оставьте контакты — перезвоним и поможем спланировать поездку.
+              </p>
+              <BookingForm className="mt-6" />
             </div>
           </Reveal>
         </div>

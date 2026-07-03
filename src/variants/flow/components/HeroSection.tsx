@@ -124,7 +124,7 @@ export function HeroSection({
                 className="mt-9 flex flex-wrap items-center gap-3 md:mt-10"
               >
                 <PrimaryCta href="#program">Смотреть программу</PrimaryCta>
-                <GhostCta href="#outro">Забронировать</GhostCta>
+                <GhostCta href="#booking">Забронировать</GhostCta>
               </motion.div>
             </div>
 
